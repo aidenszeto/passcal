@@ -1,0 +1,35 @@
+name: Run Satellite Script
+
+on:
+  schedule:
+    # Run every Sunday at 12:00 PM UTC
+    - cron: '0 12 * * 0'
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'  # Specify the Python version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Ensure you have a requirements.txt file
+
+    - name: Run the script
+      env:
+        OBSERVER_LAT: ${{ secrets.OBSERVER_LAT }}
+        OBSERVER_LNG: ${{ secrets.OBSERVER_LNG }}
+        OBSERVER_ALT: ${{ secrets.OBSERVER_ALT }}
+        API_KEY: ${{ secrets.API_KEY }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+      run: python combined_script.py
