@@ -32,4 +32,4 @@ jobs:
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
-      run: python combined_script.py
+      run: python passcal.py
