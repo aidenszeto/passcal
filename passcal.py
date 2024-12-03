@@ -10,44 +10,17 @@ import pickle
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 def authenticate_google():
-    """Authenticate with Google using client ID and secret from environment variables."""
-    creds = None
-    # Check for existing token.pickle (stored credentials)
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-
-    # If no valid credentials, log in
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            client_id = os.getenv("GOOGLE_CLIENT_ID")
-            client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
-
-            if not client_id or not client_secret:
-                print("Error: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables must be set.")
-                return None
-
-            flow = InstalledAppFlow.from_client_config(
-                {
-                    "installed": {
-                        "client_id": client_id,
-                        "client_secret": client_secret,
-                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                        "token_uri": "https://oauth2.googleapis.com/token",
-                        "redirect_uris": ["urn:ietf:wg:oauth:2.0:oob", "http://localhost"]
-                    }
-                },
-                SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-        # Save credentials for future use
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
-
+    """Authenticate with Google using a service account."""
+    credentials_info = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+    if not credentials_info:
+        print("Error: GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable must be set.")
+        return None
+    credentials = service_account.Credentials.from_service_account_info(
+        json.loads(credentials_info),
+        scopes=SCOPES
+    )
     # Build the Calendar API service
-    return build('calendar', 'v3', credentials=creds)
+    return build('calendar', 'v3', credentials=credentials)
 
 def fetch_satellite_passes():
     """Fetch satellite passes from the API."""
