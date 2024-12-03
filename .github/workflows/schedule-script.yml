@@ -29,7 +29,6 @@ jobs:
         OBSERVER_LNG: ${{ secrets.OBSERVER_LNG }}
         OBSERVER_ALT: ${{ secrets.OBSERVER_ALT }}
         API_KEY: ${{ secrets.API_KEY }}
-        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
         CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
       run: python passcal.py
